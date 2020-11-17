@@ -1,0 +1,18 @@
+{
+  "name": "xbox-series-x-finder",
+  "version": "1.0.0",
+  "description": "Xbox Series X Finder",
+  "main": "finder.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mike Talley",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "dayjs": "^1.9.6",
+    "inquirer": "^7.3.3",
+    "node-html-parser": "^2.0.0",
+    "play-sound": "^1.1.3"
+  }
+}
