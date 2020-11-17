@@ -5,9 +5,20 @@ const inquirer = require("inquirer");
 const axios = require("axios");
 const HTMLParser = require("node-html-parser");
 const dayjs = require("dayjs");
+const SKUS = require("./skus.json");
 
 const weGotOne = () => {
   return player.play("./sounds/we-got-one.mp3");
+};
+
+const getConsole = () => {
+  return inquirer.prompt({
+    name: "console",
+    message: "Which console are you looking for?",
+    type: "list",
+    choices: ["Xbox Series X", "Xbox Series S", "Playstation 5"],
+    default: "Xbox Series X",
+  });
 };
 
 const getZipcode = () => {
@@ -30,9 +41,9 @@ const getDistance = () => {
   });
 };
 
-const logStore = (storeRow, type) => {
+const logStore = (storeRow, storeType) => {
   console.log(
-    `Stock: ${storeRow.childNodes[2].childNodes[0].rawText} - ${type} ${storeRow.childNodes[0].childNodes[0].rawText}`
+    `Stock: ${storeRow.childNodes[2].childNodes[0].rawText} - ${storeType} ${storeRow.childNodes[0].childNodes[0].rawText}`
   );
 };
 
@@ -44,8 +55,8 @@ const logTarget = (storeRow) => {
   return logStore(storeRow, "Target");
 };
 
-const checkTarget = async (zipcode, distance) => {
-  const url = `https://popfindr.com/results?pid=207-41-0001&zip=${zipcode}&range=${distance}&webpage=target&token=03AGdBq27_Qd5fFPOJ-ekYtwVpeS7JgUCJ4l_nBe0PoX_6h1yCdzjDcT6c7PD-zoyWGFkZ_8YbQjqgzc37XTEPLkZh5uY3-yiZm-SXAtyQp2oreOSmSX4r18d2jioMYZICu6jufFwlzKkxsKZXSKKHjituomQksfBbPTg7UQzC3lmy5vS19THGUbOhVkwwSzHTOVPWmlgW2NdCae2gIrcV68tYXpV5muArRSeFLOVbePOa4n_mJT7cDyaY5F9jHoN6acCZsLvOL5NBBPmG5KuaztB17LyS0GNivUdwinbkWmuUkM0-uFEw39dD58AyoA45cs7nMw195thQMwpbCyxC6VhMKnOhnD3lqnVNUd0PFeEIruBDIUfzctaGg7Dd8piaTvYffICoaKkjbpn7qtJKwHH88_0CJ6Jiyyheew8TV6i9XcxwvfMmsIEoYWMvDO1ljGPIJ8pTpPNS`;
+const checkTarget = async (sku, zipcode, distance) => {
+  const url = `https://popfindr.com/results?pid=${sku}&zip=${zipcode}&range=${distance}&webpage=target&token=03AGdBq27_Qd5fFPOJ-ekYtwVpeS7JgUCJ4l_nBe0PoX_6h1yCdzjDcT6c7PD-zoyWGFkZ_8YbQjqgzc37XTEPLkZh5uY3-yiZm-SXAtyQp2oreOSmSX4r18d2jioMYZICu6jufFwlzKkxsKZXSKKHjituomQksfBbPTg7UQzC3lmy5vS19THGUbOhVkwwSzHTOVPWmlgW2NdCae2gIrcV68tYXpV5muArRSeFLOVbePOa4n_mJT7cDyaY5F9jHoN6acCZsLvOL5NBBPmG5KuaztB17LyS0GNivUdwinbkWmuUkM0-uFEw39dD58AyoA45cs7nMw195thQMwpbCyxC6VhMKnOhnD3lqnVNUd0PFeEIruBDIUfzctaGg7Dd8piaTvYffICoaKkjbpn7qtJKwHH88_0CJ6Jiyyheew8TV6i9XcxwvfMmsIEoYWMvDO1ljGPIJ8pTpPNS`;
 
   let pageContent;
 
@@ -82,8 +93,8 @@ const checkTarget = async (zipcode, distance) => {
   console.log(`${storesWithStock.length} Targets with inventory found.`);
 };
 
-const checkGamestop = async (zipcode, distance) => {
-  const url = `https://popfindr.com/results?pid=224744&zip=${zipcode}&range=${distance}&webpage=gamestop&token=03AGdBq27joniO_jR_NgAmwT6SfTWkYaeV0U9Fvf0CPykvxr8YOMNhQO6vIxb_nOXfOGqh_K7nVg98KERJX7xj2814IWRfpfrjWJ0Go9xAJ3mixqtlNxFQAtx-LfhBJmgk0X1AUkwxv_Y_xrr3t3pJu6wCGSFarj6ZNaoqLCAvVWKFECSvihugwIGGsC4mIiXjYpNvOgVTlbvSmK7UnNUoLj9BIsmtkrHtAaWiiVOxaWxXZJodepDpTArp64DWwK_SeC58azeEaMRUiB-HC1GZ-PD-ff3E_q-eCYU_54utu6jgNCwjl3jGWAqzpWAi6nA1FQ-o1hKLWNY_q8zEGsP58p0zcmYX2dC9SxVrfuAeyxyjWw__Eb-g3XJpAM4szrDB2LkQvsmjffpujOdQ9fNf801HDtwk6dBSFC3hbfN6ZCrVcezbYWOEWEr5CwMDvWEFXq_5c1ibPypt`;
+const checkGamestop = async (sku, zipcode, distance) => {
+  const url = `https://popfindr.com/results?pid=${sku}&zip=${zipcode}&range=${distance}&webpage=gamestop&token=03AGdBq27joniO_jR_NgAmwT6SfTWkYaeV0U9Fvf0CPykvxr8YOMNhQO6vIxb_nOXfOGqh_K7nVg98KERJX7xj2814IWRfpfrjWJ0Go9xAJ3mixqtlNxFQAtx-LfhBJmgk0X1AUkwxv_Y_xrr3t3pJu6wCGSFarj6ZNaoqLCAvVWKFECSvihugwIGGsC4mIiXjYpNvOgVTlbvSmK7UnNUoLj9BIsmtkrHtAaWiiVOxaWxXZJodepDpTArp64DWwK_SeC58azeEaMRUiB-HC1GZ-PD-ff3E_q-eCYU_54utu6jgNCwjl3jGWAqzpWAi6nA1FQ-o1hKLWNY_q8zEGsP58p0zcmYX2dC9SxVrfuAeyxyjWw__Eb-g3XJpAM4szrDB2LkQvsmjffpujOdQ9fNf801HDtwk6dBSFC3hbfN6ZCrVcezbYWOEWEr5CwMDvWEFXq_5c1ibPypt`;
   let pageContent;
 
   console.log(
@@ -120,20 +131,26 @@ const checkGamestop = async (zipcode, distance) => {
 };
 
 const start = async () => {
+  const { console: gameConsole } = await getConsole();
   const { zipcode } = await getZipcode();
   const { distance } = await getDistance();
 
-  console.log("Preparing to search...");
+  console.log(`Preparing to search for ${gameConsole}...`);
+
+  await checkGamestop(SKUS[gameConsole].gamestop, zipcode, distance);
+  setTimeout(async () => {
+    await checkTarget(SKUS[gameConsole].target, zipcode, distance);
+  }, 10000);
 
   setInterval(async () => {
-    await checkGamestop(zipcode, distance);
-  }, 10000);
+    await checkGamestop(SKUS[gameConsole].gamestop, zipcode, distance);
+  }, 60000);
 
   setTimeout(async () => {
     setInterval(async () => {
-      await checkTarget(zipcode, distance);
-    }, 10000);
-  }, 7500);
+      await checkTarget(SKUS[gameConsole].target, zipcode, distance);
+    }, 60000);
+  }, 30000);
 };
 
 start();

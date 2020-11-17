@@ -1,0 +1,14 @@
+{
+  "Playstation 5": {
+    "gamestop": "225169",
+    "target": "207-43-0001"
+  },
+  "Xbox Series X": {
+    "gamestop": "224744",
+    "target": "207-41-0001"
+  },
+  "Xbox Series S": {
+    "gamestop": "224746",
+    "target": "207-41-0002"
+  }
+}
