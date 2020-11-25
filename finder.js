@@ -101,9 +101,14 @@ const checkGamestop = async (sku, zipcode, distance) => {
     `[${dayjs()}] Checking Gamestops within ${distance} miles of ${zipcode}.`
   );
 
-  await axios.get(url).then((resp) => {
-    pageContent = HTMLParser.parse(resp.data);
-  });
+  await axios
+    .get(url)
+    .then((resp) => {
+      pageContent = HTMLParser.parse(resp.data);
+    })
+    .catch((error) => {
+      console.log(`Error: ${e}`);
+    });
 
   const storeRows = pageContent
     .querySelectorAll("tbody")[1]
@@ -137,14 +142,14 @@ const start = async () => {
 
   console.log(`Preparing to search for ${gameConsole}...`);
 
-  await checkGamestop(SKUS[gameConsole].gamestop, zipcode, distance);
+  // await checkGamestop(SKUS[gameConsole].gamestop, zipcode, distance);
   setTimeout(async () => {
     await checkTarget(SKUS[gameConsole].target, zipcode, distance);
   }, 10000);
 
-  setInterval(async () => {
-    await checkGamestop(SKUS[gameConsole].gamestop, zipcode, distance);
-  }, 60000);
+  // setInterval(async () => {
+  //   await checkGamestop(SKUS[gameConsole].gamestop, zipcode, distance);
+  // }, 60000);
 
   setTimeout(async () => {
     setInterval(async () => {
