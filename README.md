@@ -1,3 +1,8 @@
+### <span style="color: red;">Currently Broken</span>
+This scraper does not currently work due to changes in the functionality of the underlying pages being scraped.
+
+---
+
 # XBox Series X Finder
 Your prayers have been answered, maybe. Just run this baby and turn the sound on your computer up!
 
